@@ -5,7 +5,7 @@
 	- SPM 8<br>
 	- print_raw_headers (for GE scanner only)<br>
 
-<h2>A. Script 1: Master_1.sh</h2>
+<h2>Script 1: Master_1.sh</h2>
 	- shell script, run through terminal<br>
 	- type which site's data to process<br>
 	- enter data input/output paths as directed by script<br>
@@ -23,10 +23,10 @@
 	- The subject specific T1 image (.nii) is located by the script from /archive/data/STOPPD/data/nii
 	- The matlab script also requires input to the parent directory which contains all subjects
 
-<h2>B. Script 2: Master_2</h2>
+<h2>Script 2: Master_2</h2>
 	- second shell script, run through terminal and enter input/output paths when prompted<br>
-	- Before running this script make sure to go through all images produced by the previous <br>
-	  script and ensure that the voxel orientations are correct	<br>
+	- Before running this script make sure to go through all images produced by the previous
+	   script and ensure that the voxel orientations are correct	<br>
 	- <strong>Refer to the document 'QC1_instructions' for details if the voxels are incorrectly oriented</strong><br>
 	- <b>The 'Protocol' document shows pictures of what the voxels should look like</b>
 
