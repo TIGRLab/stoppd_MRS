@@ -42,7 +42,7 @@
 	- only slight syntax changes should be necessary to modify these scripts in order to adapt them to data from other sites
 	- at the end of this script, there will be an sgacc folder and a dlpfc folder, each containing their respective table file, plot.pdf (both lcmodel outputs) as well as the generated csv file with the extracted metabolite information. The script also takes care of csf correction.
 
-<b> Scripts that still need to be written: </b> <br>
+<h2> Scripts that still need to be written: </h2> 
 	- matlab1_PMC.m (use matlab1_xxx from any site as a template)<br>
 	- csv_creation_MAS.m, csv_creation_NKI.m, csv_creation_PMC.m <br>
 		- Before creating these files it is necessary to have the results from LCModel ready
