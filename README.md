@@ -1,13 +1,13 @@
 # stoppd_MRS
 
-<h3>1. Need to download the following software externally for scripts to work:</h3>
+<h2>1. Need to download the following software externally for scripts to work:</h2>
 - Gannet2.0
 - SPM 8
 - print_raw_headers (for GE scanner only)
 
-<h3>2. Scripts:</h3>
+<h2>2. Scripts:</h2>
 
-<h2>Master_1</h2>
+<h3>Master_1</h3>
 - shell script, run through terminal
 - type which site's data to process
 - enter data input/output paths as directed by script
@@ -25,7 +25,7 @@
 	- The subject specific T1 image (.nii) is located by the script from /archive/data/STOPPD/data/nii
 	- The matlab script also requires input to the parent directory which contains all subjects
 
-<h2>Master_2</h2>
+<h3>Master_2</h3>
 - second shell script, run through terminal and enter input/output paths when prompted
 - Before running this script make sure to go through all images produced by the previous 
   script and ensure that the voxel orientations are correct	
@@ -39,4 +39,7 @@
 
 - Links to a matlab script 'csv_creation.m'
 	- Need to create versions of this script to ensure it runs for other sites, right now only written for cmh data
-	- 
+	- csv_creation.m calls a function navigate_to_MRS.m, these two scripts are responsible for extracting information 
+	  from lcmodel text files which contain metabolite concentrations, %standard deviation, and other important info.
+	- only slight syntax changes should be necessary to modify these scripts in order to adapt them to data from other sites
+	- at the end of this script, there will be an sgacc folder and a dlpfc folder, each containing their respective table file, plot.pdf (both lcmodel outputs) as well as the generated csv file with the extracted metabolite information. The script also takes care of csf correction.
