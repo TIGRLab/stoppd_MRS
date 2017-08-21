@@ -1,11 +1,11 @@
 # stoppd_MRS
 
-<h3>1.Need to download the following software externally for scripts to work:</h3>
+<h3>1. Need to download the following software externally for scripts to work:</h3>
 - Gannet2.0
 - SPM 8
 - print_raw_headers (for GE scanner only)
 
-<h3>2.Scripts:</h3>
+<h3>2. Scripts:</h3>
 
 <h2>Master_1</h2>
 - shell script, run through terminal
@@ -14,7 +14,7 @@
 - enter matlab dependencies:
 		- Save scripts/gannet/spm in one folder and enter in that path when dependencies are required
 
-<h1> Script Description: </h1>
+<h5> Script Description: </h5>
 - reads information from header files 
 - data organization: moving files into folders for easy access (cmh data only)
 - links to matlab script: matlab1_xxx, where xxx is the site name
