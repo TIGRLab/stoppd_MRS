@@ -1,6 +1,6 @@
 # stoppd_MRS
 
-<h2>1. Need to download the following software for scripts to work:</h2>
+<h2>Need to download the following software for scripts to work:</h2>
 	- Gannet2.0<br>
 	- SPM 8<br>
 	- print_raw_headers (for GE scanner only)<br>
@@ -12,7 +12,7 @@
 	- enter matlab dependencies:<br>
 		- Save scripts/gannet/spm in one folder and enter in that path when dependencies are required
 
-<h4> Script Description: </h4>
+<h4> Description: </h4>
 	- reads information from header files <br>
 	- data organization: moving files into folders for easy access (cmh data only)<br>
 	- links to matlab script: matlab1_xxx, where xxx is the site name<br>
@@ -30,7 +30,7 @@
 	- <strong>Refer to the document 'QC1_instructions' for details if the voxels are incorrectly oriented</strong><br>
 	- <b>The 'Protocol' document shows pictures of what the voxels should look like</b>
 
-<h4> Script Description: </h4>
+<h4> Description: </h4>
 	- uses FSL and BET (Brain extraction tool) to generate csf fraction values and voxel volume for each ROI<br>
 	- also creates masks in nifti format<br>
 	- <b>If LCModel can be automated it needs to be run within this script. The exact location is shown in the script with comments</b>
