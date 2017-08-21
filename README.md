@@ -1,9 +1,9 @@
 # stoppd_MRS
 
 <h2>1. Need to download the following software externally for scripts to work:</h2>
-	- Gannet2.0
-	- SPM 8
-	- print_raw_headers (for GE scanner only)
+	- Gannet2.0<br>
+	- SPM 8<br>
+	- print_raw_headers (for GE scanner only)<br>
 
 <h2>2. Scripts:</h2>
 
