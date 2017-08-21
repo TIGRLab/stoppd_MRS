@@ -1,0 +1,326 @@
+#!/bin/bash
+
+#MASTERSCRIPT 2
+
+source /etc/profile.d/modules.sh
+source /etc/profile.d/quarantine.sh
+module load FSL/5.0.9
+module load matlab/R2015b
+
+
+while :
+do
+
+  echo "Which site's data do you want to work on (type MAS/NKI/CMH/PMC or exit): "
+  read site
+
+  case $site in
+
+##START OF CAMH DATA=========================================================================
+  "CMH")
+  echo "Now reading camh dataset"
+  while :
+  do
+    echo "Enter the path of the results folder: "
+    read results
+    if [ -d "${results}" ] ; then
+        echo "$results is a directory";
+        cd $results
+
+        break;
+    else
+        echo "invalid path, please re-enter."
+    fi
+  done
+
+  chmod 777 $results
+  cd $results
+  #previously (/projects/rutwik/2017/STOP-PD/new_tests/sample_set_results)
+
+  #module load FSL
+
+
+  for directories in *;
+  do
+
+    # # #change into each directory to be able to run csf extraction
+
+      cd $results/$directories/dcmdir2
+    #
+    echo "working on:" `pwd`
+    # #-------------------------------------------------------------------------------
+    #PART A: Prep of Data
+
+    #rename the nifti file
+    mv s*.nii BRAVO.nii
+    #-------------------------------------------------------------------------------
+    #PART B: Data Processing
+
+    #brain extraction command
+    bet BRAVO Ibet2 -R -f 0.4
+
+    #segmentation command
+    fast -t 1 Ibet2
+
+    # # #-------------------------------------------------------------------------------
+    # #PART C: CSF fraction Computation
+
+    for filename in *.jpg;
+    do
+          p_name=$(echo $filename | cut -f 1 -d '.')
+
+          echo "Currently working on --> "$p_name
+          #1. extract ROI of the csf mask
+          fslmaths Ibet2_pve_0 -mas $p_name'_mask' Ibet2_masked
+
+          #2.find average. ROImasksc= total# voxels in ROI/tot# voxels in scanned FOV (256x256x200)
+          FSLDIR= which fslstats;
+          echo "This is the path to FSL: " $FSLDIR/bin/fslstats
+
+          aveROI=`$FSLDIR/bin/fslstats $p_name'_mask' -m`
+          echo "average ROI is: "$aveROI
+          #3.find average CSF mask in ROI=sum of all values of CSF in ROI/tot# voxels in scanned FOV (256x256x200)
+          aveCSF=`$FSLDIR/bin/fslstats Ibet2_masked -m`
+          echo "average CSF value is: "$aveCSF
+
+          #4. compute the actual csf_fraction
+
+          csf_fraction=$(echo "scale=5; $aveCSF/$aveROI" | bc)
+          #csf_fraction= $((aveCSF/aveROI))>>$p_name'_csf_fraction.txt'
+          echo "The final csf fraction is: "$csf_fraction
+
+          echo "$csf_fraction" >> "csf_fraction.txt"
+          #remove leading white spaces in the text file
+          sed "s/^[ \t]*//" -i $results/'output_'$directories/dcmdir2/csf_fraction.txt
+
+
+
+          #5. check the total volume in 10^-3 of the ROI mask
+
+          TotVol=`$FSLDIR/bin/fslstats $p_name'_mask' -V | awk '{print $2}'`
+          echo "The total volume of the ROI mask is: "$TotVol
+
+          # echo "$p_name":" $TotVol" >> "total_volume.txt"
+
+   done #filename loop
+  done #end of main for loop
+
+
+  #tie in matlab csv_creation
+  while :
+  do
+    echo "Enter path of matlab dependencies: "
+    read matlab_transfer
+    if [ -d "${matlab_transfer}" ] ; then
+        echo "$matlab_transfer is a directory";
+        break;
+    else
+        echo "invalid path, please re-enter."
+    fi
+  done
+
+
+  matlab -nodisplay -nosplash -r "addpath(genpath('$matlab_transfer')); csv_creation; quit"
+
+
+  #command to delete all csf fraction files if necessary: find . -name "csf_fraction.txt" -type f -delete
+
+  ;;
+##END OF CAMH DATA ======================================================================
+
+##START OF MAS DATA =====================================================================
+  "MAS")
+   echo "Now reading MAS dataset"
+
+   while :
+   do
+     echo "Enter the path of data folder: "
+     read results
+     if [ -d "${results}" ] ; then
+         echo "$results is a directory";
+         chmod 777 $results
+         cd $results #(previously /scratch/rutwik/MAS/dataset_sim)
+
+         break;
+     else
+         echo "invalid path, please re-enter."
+     fi
+   done
+
+   for directories in *;
+   do
+
+     #change into each subject directory to be able to run csf extraction
+     cd $results/$directories
+
+     echo "working on:" `pwd`
+     # #-------------------------------------------------------------------------------
+     #PART A: Prep of Data
+
+     #rename the nifti file
+     mv *MPRAGE.nii BRAVO.nii
+     #-------------------------------------------------------------------------------
+     #PART B: Data Processing
+
+     #brain extraction command
+     bet BRAVO Ibet2 -R -f 0.4
+
+     #segmentation command
+     fast -t 1 Ibet2
+
+     # # # #-------------------------------------------------------------------------------
+     # # #PART C: CSF fraction Computation
+
+     for filename in *act.SDAT;
+     do
+
+            echo "Currently working on --> "$filename
+            s_name=$(echo $filename | cut -f 1 -d '.')
+
+         #1. extract ROI of the csf mask
+            fslmaths Ibet2_pve_0 -mas $s_name'_mask' Ibet2_masked
+
+         #2.find average. ROImasksc= total# voxels in ROI/tot# voxels in scanned FOV (256x256x200)
+            FSLDIR= which fslstats;
+            echo "This is the path to FSL: " $FSLDIR/bin/fslstats
+            aveROI=`$FSLDIR/bin/fslstats $s_name'_mask' -m`
+            echo "average ROI is: "$aveROI
+
+         #3.find average CSF mask in ROI=sum of all values of CSF in ROI/tot# voxels in scanned FOV (256x256x200)
+            aveCSF=`$FSLDIR/bin/fslstats Ibet2_masked -m`
+            echo "average CSF value is: "$aveCSF
+
+         #4. compute the actual csf_fraction
+            csf_fraction=$(echo "scale=5; $aveCSF/$aveROI" | bc)
+            #csf_fraction= $((aveCSF/aveROI))>>$p_name'_csf_fraction.txt'
+            echo "The final csf fraction is: "$csf_fraction
+            echo "$csf_fraction" >> "csf_fraction.txt"
+
+         #5. remove leading white spaces in the text file
+            sed "s/^[ \t]*//" -i $results/$directories/csf_fraction.txt
+
+         #6. check the total volume in 10^-3 of the ROI mask
+            TotVol=`$FSLDIR/bin/fslstats $s_name'_mask' -V | awk '{print $2}'`
+            echo "The total volume of the ROI mask is: "$TotVol
+            echo "$s_name":" $TotVol" >> "total_volume.txt"
+
+            #########################################################################
+            #for each sdat file i can run the MRS software within this loop-----------
+            #add code to create the MRS plots and text tables
+
+            #this can be done once we decide what software to use for MRS analysis
+            #########################################################################
+
+    done #filename loop
+
+   done #end of main for loop
+
+#   matlab -nodisplay -nosplash -r "addpath(genpath('$matlab_transfer')); csv_creation; quit"
+
+   ;;
+##END OF MAS DATA ======================================================================
+
+##START OF NKI DATA ======================================================================
+    "NKI")
+    echo "Now reading NKI dataset"
+
+    while :
+do
+  echo "Enter the path of data folder: "
+  read results_NKI
+  if [ -d "${results_NKI}" ] ; then
+      echo "$results_NKI is a directory";
+      chmod 777 $results_NKI
+      cd $results_NKI #(previously /scratch/rutwik/NKI/MRS/sample_set)
+
+      break;
+  else
+      echo "invalid path, please re-enter."
+  fi
+done
+
+for directories in *;
+do
+
+  #change into each subject directory to be able to run csf extraction
+  cd $results_NKI/$directories
+
+  echo "working on:" `pwd`
+  # #-------------------------------------------------------------------------------
+  #PART A: Prep of Data
+
+  #rename the nifti file
+  mv *mprage.nii BRAVO.nii
+  #-------------------------------------------------------------------------------
+  #PART B: Data Processing
+
+  #brain extraction command
+  bet BRAVO Ibet2 -R -f 0.4
+
+  #segmentation command
+  fast -t 1 Ibet2
+
+  # # # #-------------------------------------------------------------------------------
+  # # #PART C: CSF fraction Computation
+
+  for filename in *.rda;
+  do
+
+         echo "Currently working on --> "$filename
+         rda_name=$(echo $filename | cut -f 1 -d '.')
+
+      #1. extract ROI of the csf mask
+         fslmaths Ibet2_pve_0 -mas $rda_name'_mask' Ibet2_masked
+
+      #2.find average. ROImasksc= total# voxels in ROI/tot# voxels in scanned FOV (256x256x200)
+         FSLDIR= which fslstats;
+         echo "This is the path to FSL: " $FSLDIR/bin/fslstats
+         aveROI=`$FSLDIR/bin/fslstats $rda_name'_mask' -m`
+         echo "average ROI is: "$aveROI
+
+      #3.find average CSF mask in ROI=sum of all values of CSF in ROI/tot# voxels in scanned FOV (256x256x200)
+         aveCSF=`$FSLDIR/bin/fslstats Ibet2_masked -m`
+         echo "average CSF value is: "$aveCSF
+
+      #4. compute the actual csf_fraction
+         csf_fraction=$(echo "scale=5; $aveCSF/$aveROI" | bc)
+         #csf_fraction= $((aveCSF/aveROI))>>$p_name'_csf_fraction.txt'
+         echo "The final csf fraction is: "$csf_fraction
+         echo "$csf_fraction" >> "csf_fraction.txt"
+
+      #5. remove leading white spaces in the text file
+         sed "s/^[ \t]*//" -i $results_NKI/$directories/csf_fraction.txt
+
+      #6. check the total volume in 10^-3 of the ROI mask
+         TotVol=`$FSLDIR/bin/fslstats $rda_name'_mask' -V | awk '{print $2}'`
+         echo "The total volume of the ROI mask is: "$TotVol
+         echo "$rda_name":" $TotVol" >> "total_volume.txt"
+
+         #########################################################################
+         #for each rda/sdat file i can run the MRS software within this loop-----------
+         #add code to create the MRS plots and text tables
+
+         #this can be done once we decide what software to use for MRS analysis
+         #########################################################################
+ done #filename loop
+
+done #end of main for loop
+#   matlab -nodisplay -nosplash -r "addpath(genpath('$matlab_transfer')); csv_creation; quit"
+
+   ;;
+##END OF NKI DATA ======================================================================
+
+##START OF PMC DATA ====================================================================
+      "PMC")
+       echo "Now reading PMC dataset"
+       ;;
+
+##END OF PMC DATA ======================================================================
+
+       "exit")
+        break;
+        ;;
+
+    esac
+
+  done
