@@ -45,5 +45,6 @@
 <h2> Scripts that still need to be written: </h2> 
 	- matlab1_PMC.m (use matlab1_xxx from any site as a template)<br>
 	- csv_creation_MAS.m, csv_creation_NKI.m, csv_creation_PMC.m <br>
-		- Before creating these files it is necessary to have the results from LCModel ready
-
+	- Before creating these files it is necessary to have the results from LCModel ready<br>
+		
+** Refer to the document <b>'pipeline_technical_details' </b> for a comprehensive description of this pipeline **
