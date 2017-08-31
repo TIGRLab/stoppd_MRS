@@ -42,9 +42,10 @@
 	- only slight syntax changes should be necessary to modify these scripts in order to adapt them to data from other sites
 	- at the end of this script, there will be an sgacc folder and a dlpfc folder, each containing their respective table file, plot.pdf (both lcmodel outputs) as well as the generated csv file with the extracted metabolite information. The script also takes care of csf correction.
 
-<h2> Scripts that still need to be written: </h2> 
-	- matlab1_PMC.m (use matlab1_xxx from any site as a template)<br>
-	- csv_creation_MAS.m, csv_creation_NKI.m, csv_creation_PMC.m <br>
+<h2> Scripts that still need to be written/edited: </h2> 
+	- csv_creation_MAS.m, csv_creation_NKI.m, csv_creation_PMC.m (use csv_creation_CMH for reference)<br>
 	- Before creating these files it is necessary to have the results from LCModel ready<br><br><br>
+	- In Master_2.sh, need to edit the PMC section. This has not been completed because the voxel placement for PMC
+	  was not correct (both dlpfc and sgacc placements were wrong for most subjects), therefore it is unclear whether or not   	     this data is usable.
 		
 ** Refer to the document <b>'pipeline_technical_details' </b> for a comprehensive description of this pipeline **
