@@ -4,6 +4,8 @@
 	- Gannet2.0<br>
 	- SPM 8<br>
 	- print_raw_headers (for GE scanner only)<br>
+	
+	**Only 2 scripts need to be run through the terminal by the user: Master_1.sh and Master_2.sh**<br>
 
 <h2>Script 1: Master_1.sh</h2>
 	- shell script, run through terminal<br>
@@ -44,8 +46,8 @@
 
 <h2> Scripts that still need to be written/edited: </h2> 
 	- csv_creation_MAS.m, csv_creation_NKI.m, csv_creation_PMC.m (use csv_creation_CMH for reference)<br>
-	- Before creating these files it is necessary to have the results from LCModel ready<br><br><br>
+	- Before creating these files it is necessary to have the results from LCModel ready<br>
 	- In Master_2.sh, need to edit the PMC section. This has not been completed because the voxel placement for PMC
-	  was not correct (both dlpfc and sgacc placements were wrong for most subjects), therefore it is unclear whether or not   	     this data is usable.
+	  was not correct (both dlpfc and sgacc placements were wrong for most subjects), therefore it is unclear whether or not   	     this data is usable.<br><br>
 		
 ** Refer to the document <b>'pipeline_technical_details' </b> for a comprehensive description of this pipeline **
