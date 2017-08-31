@@ -5,7 +5,7 @@
 	- SPM 8<br>
 	- print_raw_headers (for GE scanner only)<br>
 	
-	**Only 2 scripts need to be run through the terminal by the user: Master_1.sh and Master_2.sh**<br>
+	**Only 2 scripts need to be run through the terminal by the user: Master_1.sh and Master_2.sh**
 
 <h2>Script 1: Master_1.sh</h2>
 	- shell script, run through terminal<br>
@@ -50,4 +50,4 @@
 	- In Master_2.sh, need to edit the PMC section. This has not been completed because the voxel placement for PMC
 	  was not correct (both dlpfc and sgacc placements were wrong for most subjects), therefore it is unclear whether or not   	     this data is usable.<br><br>
 		
-** Refer to the document <b>'pipeline_technical_details' </b> for a comprehensive description of this pipeline **
+**Refer to the document <b>'pipeline_technical_details' </b> for a comprehensive description of this pipeline**
